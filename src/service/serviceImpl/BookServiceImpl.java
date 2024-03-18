@@ -7,34 +7,28 @@ import service.BookService;
 
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BookServiceImpl implements BookService {
     @Override
-    public Book saveBook(Long libraryId, Book book) {
-        for(Library library : Database.libraries){
-            if(library.getId() == libraryId){
-                library.setBooks(book);
-
-            }
-        }
-        return book;
+    public List<Book> saveBook(Long libraryId, Book book) {
+        Database.books.add(book);
+        return Database.books;
     }
+
+
     @Override
-    public List<Book> getAllBooks(Long libraryId) {
-        List<Book> r = new ArrayList<>();
-        if (Database.books.getLast().getId() == libraryId) {
-            r = Database.books;
-        }
-        return r;
+    public List<Book> getAllBooks() {
+        return Database.books;
     }
 
     @Override
     public Book getBookById(Long libraryId, Long bookId) {
-        for(Library library : Database.libraries){
-            if(library.getId() == libraryId){
-                for(Book book : Database.books){
-                    if(book.getId() == bookId){
+        for (Library library : Database.libraries) {
+            if (library.getId() == libraryId) {
+                for (Book book : Database.books) {
+                    if (book.getId() == bookId) {
                         return book;
                     }
                 }
@@ -45,7 +39,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String deleteBook(Long libraryId, Long bookId) {
-        for(Library library : Database.libraries) {
+        for (Library library : Database.libraries) {
             if (library.getId() == libraryId) {
                 for (Book book : Database.books) {
                     if (book.getId() == bookId) {
@@ -61,13 +55,18 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void clearBooksByLibraryId(Long libraryId) {
-        for(Library library : Database.libraries) {
-            if (library.getId() == libraryId) {
-                library.getBooks().clear();
-                    }
-                }
+        Iterator<Library> iterator = Database.libraries.iterator();
+        while (iterator.hasNext()) {
+            Library library = iterator.next();
+            if (library.getId().equals(libraryId)) {
+                iterator.remove();
+                System.out.println("Успешно удалено.");
+            } else {
+                System.out.println("Не удалено.");
             }
         }
+    }
+}
 
 
 

@@ -4,28 +4,24 @@ import models.Database;
 import models.Library;
 import service.LibraryService;
 
-import javax.xml.crypto.Data;
-import java.util.Date;
 import java.util.List;
 
 public class LibraryServiceImpl implements LibraryService {
     @Override
-    public List<Library> saveLibrary(List<Library> libraries) {
-
-        Database.libraries.addAll(libraries);
-        return libraries;
+    public List<Library> saveLibrary(Library libraries) {
+        Database.libraries.add(libraries);
+        return Database.libraries;
     }
 
     @Override
     public List<Library> getAllLibraries() {
-
         return Database.libraries;
     }
 
     @Override
     public Library getLibraryById(Long id) {
         for (Library library : Database.libraries) {
-            if(library.getId() == id){
+            if (library.getId() == id) {
                 return library;
             }
         }
@@ -33,22 +29,22 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public void updateLibrary(Long id, Library library) {
-        for (Library library1 : Database.libraries) {
-            if(library1.getId() == id){
-                 Database.libraries.set(Math.toIntExact(id),library);
+    public String updateLibrary(Long id, Library library) {
+        List<Library> libraries = Database.libraries;
+        for (Library library1 :  libraries){
+            if (library1.getId().equals(id)) {
+                library1.setId(library.getId());
+                library1.setName(library.getName());
+                library1.setAddress(library.getAddress());
+                return "success";
             }
         }
+        return "error";
     }
 
     @Override
     public String deleteLibrary(Long id) {
-
-        for (Library library : Database.libraries) {
-            if(library.getId() == id){
-                Database.libraries.remove(library);
-            }
-        }
+        Database.libraries.removeIf(library -> library.getId().equals(id));
         return "successfully deleted";
     }
 }

@@ -5,9 +5,9 @@ import models.Book;
 import java.util.List;
 
 public interface BookService {
-    Book saveBook(Long libraryId,Book book);
+    List<Book> saveBook(Long libraryId,Book book);
 
-    List<Book> getAllBooks(Long libraryId);
+    List<Book> getAllBooks();
 
     Book getBookById(Long libraryId, Long bookId);
 
